@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package userAPI_v1;
 
+import "google/protobuf/timestamp.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/wrappers.proto";
 
@@ -20,6 +21,14 @@ message UserInfo {
     string password = 3;
     string password_confirm = 4;
     Role role = 5;
+}
+
+message User {
+    int64 id = 1;
+    UserInfo user = 2;
+    google.protobuf.Timestamp created_at = 3;
+    google.protobuf.Timestamp updated_at = 4;
+
 }
 
 enum Role {
@@ -46,7 +55,7 @@ message GetRequest {
 }
 
 message GetResponse {
-    UserInfo user = 1;
+    User user = 1;
 }
 
 message UpdateRequest {
