@@ -4,7 +4,7 @@
 // - protoc             v3.12.4
 // source: userAPI.proto
 
-package note_v1
+package userAPI_v1
 
 import (
 	context "context"
