@@ -15,20 +15,13 @@ service UserAPIV1 {
     rpc Delete(DeleteRequest) returns (google.protobuf.Empty);
 }
 
-message UserInfo {
-    string name = 1;
-    string email = 2;
-    string password = 3;
-    string password_confirm = 4;
-    Role role = 5;
-}
-
 message User {
     int64 id = 1;
-    UserInfo user = 2;
-    google.protobuf.Timestamp created_at = 3;
-    google.protobuf.Timestamp updated_at = 4;
-
+    string name = 2;
+    string email = 3;
+    Role role = 4;
+    google.protobuf.Timestamp created_at = 5;
+    google.protobuf.Timestamp updated_at = 6;
 }
 
 enum Role {
@@ -36,14 +29,22 @@ enum Role {
     ADMIN = 1; 
 }
 
-message UpdateUserInfo {
+message UserCreate {
+    string name = 1;
+    string email = 2;
+    string password = 3;
+    string password_confirm = 4;
+    Role role = 5;
+}
+
+message UserUpdate {
     google.protobuf.Int64Value id = 1;
     google.protobuf.StringValue name = 2;
     google.protobuf.StringValue email = 3;
 }
 
 message CreateRequest {
-    UserInfo user = 1;
+    UserCreate user = 1;
 }
 
 message CreateResponse {
@@ -59,8 +60,7 @@ message GetResponse {
 }
 
 message UpdateRequest {
-    int64 id = 1;
-    UpdateUserInfo info = 2;
+    UserUpdate info = 1;
 }
 
 message DeleteRequest {
