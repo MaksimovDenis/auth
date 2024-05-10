@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"github.com/MaksimovDenis/auth/internal/closer"
 	"github.com/MaksimovDenis/auth/internal/config"
 	desc "github.com/MaksimovDenis/auth/pkg/userAPI_v1"
 	"google.golang.org/grpc"
@@ -25,6 +26,15 @@ func NewApp(ctx context.Context) (*App, error) {
 	}
 
 	return a, nil
+}
+
+func (a *App) Run() error {
+	defer func() {
+		closer.CloseAll()
+		closer.Wait()
+	}()
+
+	return a.runGRPCServer()
 }
 
 func (a *App) initDeps(ctx context.Context) error {
