@@ -1,7 +1,21 @@
 package user
 
-import desc "github.com/MaksimovDenis/auth/pkg/userAPI_v1"
+import (
+	"context"
+	"github.com/MaksimovDenis/auth/internal/converter"
+	desc "github.com/MaksimovDenis/auth/pkg/userAPI_v1"
+	"log"
+)
 
-func (i *Implemenation) Create(ctx context.Context, req *desc.CreateRequest) (*desc.CreateResponse, error) {
-	id, err := i.userService.Create(ctx, converter.ToUserCreateFromSe)
+func (i *Implementation) Create(ctx context.Context, req *desc.CreateRequest) (*desc.CreateResponse, error) {
+	id, err := i.userService.Create(ctx, converter.ToUserCreateFromDesc(req.GetUser()))
+	if err != nil {
+		return nil, err
+	}
+
+	log.Printf("insertded note with id: %d", id)
+
+	return &desc.CreateResponse{
+		Id: id,
+	}, nil
 }

@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	"github.com/MaksimovDenis/auth/internal/repository/user/model"
+	"github.com/MaksimovDenis/auth/internal/model"
 	"github.com/golang/protobuf/ptypes/empty"
 )
 

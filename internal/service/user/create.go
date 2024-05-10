@@ -2,7 +2,7 @@ package user
 
 import (
 	"context"
-	"github.com/MaksimovDenis/auth/internal/repository/user/model"
+	"github.com/MaksimovDenis/auth/internal/model"
 )
 
 func (s *serv) Create(ctx context.Context, create *model.UserCreate) (int64, error) {

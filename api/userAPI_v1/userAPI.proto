@@ -60,7 +60,7 @@ message GetResponse {
 }
 
 message UpdateRequest {
-    UserUpdate info = 1;
+    UserUpdate user = 1;
 }
 
 message DeleteRequest {

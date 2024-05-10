@@ -1,6 +1,7 @@
 package user
 
 import (
+	"github.com/MaksimovDenis/auth/internal/client/db"
 	"github.com/MaksimovDenis/auth/internal/repository"
 	"github.com/MaksimovDenis/auth/internal/service"
 )
