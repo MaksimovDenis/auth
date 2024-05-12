@@ -5,7 +5,7 @@ volumes:
 
 services:
   pg-local:
-    image: postgres:14-alpine3.17
+    image: postgres:latest
     env_file:
       - .env
     ports:

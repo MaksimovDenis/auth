@@ -3,25 +3,31 @@ package user
 import (
 	"context"
 	"errors"
+	"fmt"
 	"github.com/MaksimovDenis/auth/internal/client/db"
 	"github.com/MaksimovDenis/auth/internal/model"
 	"github.com/MaksimovDenis/auth/internal/repository"
-	"github.com/MaksimovDenis/auth/internal/repository/user/converter "
+	"github.com/MaksimovDenis/auth/internal/repository/user/converter"
 	modelRepo "github.com/MaksimovDenis/auth/internal/repository/user/model"
 	sq "github.com/Masterminds/squirrel"
 	"github.com/golang/protobuf/ptypes/empty"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+	"log"
 )
 
 const (
-	tableName = "user"
+	tableName = "users"
 
 	idColumn        = "id"
 	nameColumn      = "name"
 	emailColumn     = "email"
 	passwordColumn  = "password"
-	roleColumn      = "role"
+	roleColumn      = "role" // Используем правильное имя столбца
 	createdAtColumn = "created_at"
 	updatedAtColumn = "updated_at"
+
+	tableName2 = "roles"
 )
 
 type repo struct {
@@ -34,6 +40,7 @@ func NewRepository(db db.Client) repository.UserRepository {
 
 func (r *repo) Get(ctx context.Context, id int64) (*model.User, error) {
 	builder := sq.Select(idColumn, nameColumn, emailColumn, roleColumn, createdAtColumn, updatedAtColumn).
+		PlaceholderFormat(sq.Dollar).
 		From(tableName).
 		Where(sq.Eq{idColumn: id}).
 		Limit(1)
@@ -58,6 +65,7 @@ func (r *repo) Get(ctx context.Context, id int64) (*model.User, error) {
 }
 
 func (r *repo) Create(ctx context.Context, user *model.UserCreate) (int64, error) {
+
 	builder := sq.Insert(tableName).
 		PlaceholderFormat(sq.Dollar).
 		Columns(nameColumn, emailColumn, passwordColumn, roleColumn).
@@ -65,6 +73,7 @@ func (r *repo) Create(ctx context.Context, user *model.UserCreate) (int64, error
 		Suffix("RETURNING id")
 
 	query, args, err := builder.ToSql()
+	fmt.Println(query)
 	if err != nil {
 		return 0, err
 	}
@@ -74,13 +83,14 @@ func (r *repo) Create(ctx context.Context, user *model.UserCreate) (int64, error
 		QueryRaw: query,
 	}
 
-	var id int64
-	err = r.db.DB().QueryRowContext(ctx, q, args...).Scan(&id)
+	var userID int64
+	err = r.db.DB().QueryRowContext(ctx, q, args...).Scan(&userID)
 	if err != nil {
-		return 0, err
+		log.Printf("failed to insert user: %v", err)
+		return 0, status.Errorf(codes.Internal, "Internal server error")
 	}
 
-	return id, nil
+	return userID, nil
 }
 
 func (r *repo) Update(ctx context.Context, user *model.UserUpdate) (*empty.Empty, error) {

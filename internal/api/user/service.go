@@ -10,7 +10,7 @@ type Implementation struct {
 	userService service.UserService
 }
 
-func NewImplemention(userService service.UserService) *Implementation {
+func NewImplementation(userService service.UserService) *Implementation {
 	return &Implementation{
 		userService: userService,
 	}
